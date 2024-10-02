@@ -12,7 +12,6 @@ def download_data():
     df = pd.read_csv(url, header=None)
     df.columns = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width', 'species']
 
-    os.makedirs('data/raw', exist_ok=True)
     df.to_csv('/app/data/raw/iris.csv', index=False)
     return df
 
@@ -24,8 +23,6 @@ def preprocess_data(df):
     scaler = StandardScaler()
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
-
-    os.makedirs('data/pre_processing', exist_ok=True)
     
     pd.DataFrame(X_train_scaled, columns=X.columns).to_csv('/app/data/pre_processing/X_train.csv', index=False)
     pd.DataFrame(X_test_scaled, columns=X.columns).to_csv('/app/data/pre_processing/X_test.csv', index=False)
@@ -38,12 +35,9 @@ def train_model():
 
     model = RandomForestClassifier()
     model.fit(X_train, y_train.values.ravel())
-    os.makedirs('models', exist_ok=True)
     joblib.dump(model, '/app/models/random_forest_model.pkl')
 
 def evaluate_model():
-    os.makedirs('result', exist_ok=True)
-
     # Load test data
     X_test = pd.read_csv('/app/data/pre_processing/X_test.csv')
     y_test = pd.read_csv('/app/data/pre_processing/y_test.csv').values.ravel() 
@@ -75,12 +69,11 @@ def evaluate_model():
         f.write(f'Precision: {precision:.2f}\n')
 
 def deploy_model():
-    os.makedirs('models', exist_ok=True)
     model_path = '/app/models/random_forest_model.pkl'
     
     if os.path.exists(model_path):
         model = joblib.load(model_path)
-        joblib.dump(model, 'models/final_model.pkl')
+        joblib.dump(model, '/app/models/final_model.pkl')
         print("Model deployed successfully.")
     else:
         print(f"Model file {model_path} does not exist. Please train and save the model first.")
