@@ -1,7 +1,6 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 import joblib
 import os
@@ -9,15 +8,12 @@ from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_sc
 import json
 
 def download_data():
-    # Dataset Iris
     url = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"
     df = pd.read_csv(url, header=None)
     df.columns = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width', 'species']
-    
-    # Create necessary directories
+
     os.makedirs('data/raw', exist_ok=True)
     
-    # Save the raw data
     df.to_csv('data/raw/iris.csv', index=False)
     return df
 
@@ -37,9 +33,6 @@ def preprocess_data(df):
     y_train.to_csv('data/pre_processing/y_train.csv', index=False)
     y_test.to_csv('data/pre_processing/y_test.csv', index=False)
 
-if __name__ == "__main__":
-    df = download_data()
-    preprocess_data(df)
 
 def train_model():
     X_train = pd.read_csv('data/pre_processing/X_train.csv')
@@ -50,13 +43,10 @@ def train_model():
     os.makedirs('models', exist_ok=True)
     joblib.dump(model, 'models/random_forest_model.pkl')
 
-if __name__ == "__main__":
-    train_model()
-
 def evaluate_model():
     os.makedirs('result', exist_ok=True)
     
-    X_test = pd.read_csv('data//pre_processing/X_test.csv')
+    X_test = pd.read_csv('data/pre_processing/X_test.csv')
     y_test = pd.read_csv('data/pre_processing/y_test.csv').values.ravel() 
     model = joblib.load('models/random_forest_model.pkl')
 
@@ -77,9 +67,6 @@ def evaluate_model():
         f.write(f'Recall: {recall:.2f}\n')
         f.write(f'Precision: {precision:.2f}\n')
 
-if __name__ == "__main__":
-    evaluate_model()
-
 def deploy_model():
     os.makedirs('models', exist_ok=True)
     model_path = 'models/random_forest_model.pkl'
@@ -92,8 +79,22 @@ def deploy_model():
         print(f"Model file {model_path} does not exist. Please train and save the model first.")
 
 if __name__ == "__main__":
-    deploy_model()
-
-
-
-
+    try:
+      
+        df = download_data()
+        print("Data downloaded successfully.")
+        
+        preprocess_data(df)
+        print("Data preprocessed successfully.")
+        
+        train_model()
+        print("Model trained successfully.")
+        
+        evaluate_model()
+        print("Model evaluation completed.")
+    
+        deploy_model()
+        print("Model deployed successfully.")
+        
+    except Exception as e:
+        print(f"An error occurred: {e}")
