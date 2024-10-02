@@ -13,7 +13,7 @@ def download_data():
     df.columns = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width', 'species']
 
     os.makedirs('data/raw', exist_ok=True)
-    df.to_csv('data/raw/iris.csv', index=False)
+    df.to_csv('/app/data/raw/iris.csv', index=False)
     return df
 
 def preprocess_data(df):
@@ -27,27 +27,27 @@ def preprocess_data(df):
 
     os.makedirs('data/pre_processing', exist_ok=True)
     
-    pd.DataFrame(X_train_scaled, columns=X.columns).to_csv('data/pre_processing/X_train.csv', index=False)
-    pd.DataFrame(X_test_scaled, columns=X.columns).to_csv('data/pre_processing/X_test.csv', index=False)
-    y_train.to_csv('data/pre_processing/y_train.csv', index=False)
-    y_test.to_csv('data/pre_processing/y_test.csv', index=False)
+    pd.DataFrame(X_train_scaled, columns=X.columns).to_csv('/app/data/pre_processing/X_train.csv', index=False)
+    pd.DataFrame(X_test_scaled, columns=X.columns).to_csv('app/data/pre_processing/X_test.csv', index=False)
+    y_train.to_csv('/app/data/pre_processing/y_train.csv', index=False)
+    y_test.to_csv('/app/data/pre_processing/y_test.csv', index=False)
 
 def train_model():
-    X_train = pd.read_csv('data/pre_processing/X_train.csv')
-    y_train = pd.read_csv('data/pre_processing/y_train.csv')
+    X_train = pd.read_csv('/app/data/pre_processing/X_train.csv')
+    y_train = pd.read_csv('/app/data/pre_processing/y_train.csv')
 
     model = RandomForestClassifier()
     model.fit(X_train, y_train.values.ravel())
     os.makedirs('models', exist_ok=True)
-    joblib.dump(model, 'models/random_forest_model.pkl')
+    joblib.dump(model, '/app/models/random_forest_model.pkl')
 
 def evaluate_model():
     os.makedirs('result', exist_ok=True)
 
     # Load test data
-    X_test = pd.read_csv('data/pre_processing/X_test.csv')
-    y_test = pd.read_csv('data/pre_processing/y_test.csv').values.ravel() 
-    model = joblib.load('models/random_forest_model.pkl')
+    X_test = pd.read_csv('/app/data/pre_processing/X_test.csv')
+    y_test = pd.read_csv('/app/data/pre_processing/y_test.csv').values.ravel() 
+    model = joblib.load('/app/models/random_forest_model.pkl')
 
     # Make predictions
     y_pred = model.predict(X_test)
@@ -76,7 +76,7 @@ def evaluate_model():
 
 def deploy_model():
     os.makedirs('models', exist_ok=True)
-    model_path = 'models/random_forest_model.pkl'
+    model_path = '/app/models/random_forest_model.pkl'
     
     if os.path.exists(model_path):
         model = joblib.load(model_path)
