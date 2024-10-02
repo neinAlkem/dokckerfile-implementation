@@ -28,7 +28,7 @@ def preprocess_data(df):
     os.makedirs('data/pre_processing', exist_ok=True)
     
     pd.DataFrame(X_train_scaled, columns=X.columns).to_csv('/app/data/pre_processing/X_train.csv', index=False)
-    pd.DataFrame(X_test_scaled, columns=X.columns).to_csv('app/data/pre_processing/X_test.csv', index=False)
+    pd.DataFrame(X_test_scaled, columns=X.columns).to_csv('/app/data/pre_processing/X_test.csv', index=False)
     y_train.to_csv('/app/data/pre_processing/y_train.csv', index=False)
     y_test.to_csv('/app/data/pre_processing/y_test.csv', index=False)
 
