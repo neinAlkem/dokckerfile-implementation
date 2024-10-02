@@ -12,7 +12,7 @@ def download_data():
     df = pd.read_csv(url, header=None)
     df.columns = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width', 'species']
 
-    df.to_csv('/app/data/raw/iris.csv', index=False)
+    df.to_csv('/app/data/iris.csv', index=False)
     return df
 
 def preprocess_data(df):
@@ -24,14 +24,14 @@ def preprocess_data(df):
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
     
-    pd.DataFrame(X_train_scaled, columns=X.columns).to_csv('/app/data/pre_processing/X_train.csv', index=False)
-    pd.DataFrame(X_test_scaled, columns=X.columns).to_csv('/app/data/pre_processing/X_test.csv', index=False)
-    y_train.to_csv('/app/data/pre_processing/y_train.csv', index=False)
-    y_test.to_csv('/app/data/pre_processing/y_test.csv', index=False)
+    pd.DataFrame(X_train_scaled, columns=X.columns).to_csv('/app/data/X_train.csv', index=False)
+    pd.DataFrame(X_test_scaled, columns=X.columns).to_csv('/app/data/X_test.csv', index=False)
+    y_train.to_csv('/app/data/y_train.csv', index=False)
+    y_test.to_csv('/app/data/y_test.csv', index=False)
 
 def train_model():
-    X_train = pd.read_csv('/app/data/pre_processing/X_train.csv')
-    y_train = pd.read_csv('/app/data/pre_processing/y_train.csv')
+    X_train = pd.read_csv('/app/data/X_train.csv')
+    y_train = pd.read_csv('/app/data/y_train.csv')
 
     model = RandomForestClassifier()
     model.fit(X_train, y_train.values.ravel())
@@ -39,8 +39,8 @@ def train_model():
 
 def evaluate_model():
     # Load test data
-    X_test = pd.read_csv('/app/data/pre_processing/X_test.csv')
-    y_test = pd.read_csv('/app/data/pre_processing/y_test.csv').values.ravel() 
+    X_test = pd.read_csv('/app/data/X_test.csv')
+    y_test = pd.read_csv('/app/data/y_test.csv').values.ravel() 
     model = joblib.load('/app/models/random_forest_model.pkl')
 
     # Make predictions
