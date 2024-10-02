@@ -13,7 +13,6 @@ def download_data():
     df.columns = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width', 'species']
 
     os.makedirs('data/raw', exist_ok=True)
-    
     df.to_csv('data/raw/iris.csv', index=False)
     return df
 
@@ -33,7 +32,6 @@ def preprocess_data(df):
     y_train.to_csv('data/pre_processing/y_train.csv', index=False)
     y_test.to_csv('data/pre_processing/y_test.csv', index=False)
 
-
 def train_model():
     X_train = pd.read_csv('data/pre_processing/X_train.csv')
     y_train = pd.read_csv('data/pre_processing/y_train.csv')
@@ -45,23 +43,32 @@ def train_model():
 
 def evaluate_model():
     os.makedirs('result', exist_ok=True)
-    
+
+    # Load test data
     X_test = pd.read_csv('data/pre_processing/X_test.csv')
     y_test = pd.read_csv('data/pre_processing/y_test.csv').values.ravel() 
     model = joblib.load('models/random_forest_model.pkl')
 
+    # Make predictions
     y_pred = model.predict(X_test)
 
+    # Calculate metrics
     accuracy = accuracy_score(y_test, y_pred)
     f1 = f1_score(y_test, y_pred, average='weighted')  
     recall = recall_score(y_test, y_pred, average='weighted')  
     precision = precision_score(y_test, y_pred, average='weighted')  
     report = classification_report(y_test, y_pred, output_dict=True)
 
-    with open('result/evaluation_report.json', 'w') as f:
+    # Save evaluation report
+    evaluation_report_path = 'result/evaluation_report.json'
+    print(f"Saving evaluation report to {evaluation_report_path}")
+    with open(evaluation_report_path, 'w') as f:
         json.dump(report, f, indent=4)
-        
-    with open('result/accuracy.txt', 'w') as f:
+
+    # Save accuracy metrics
+    accuracy_path = 'result/accuracy.txt'
+    print(f"Saving accuracy report to {accuracy_path}")
+    with open(accuracy_path, 'w') as f:
         f.write(f'Accuracy: {accuracy:.2f}\n')
         f.write(f'F1 Score: {f1:.2f}\n')
         f.write(f'Recall: {recall:.2f}\n')
@@ -80,7 +87,6 @@ def deploy_model():
 
 if __name__ == "__main__":
     try:
-      
         df = download_data()
         print("Data downloaded successfully.")
         
