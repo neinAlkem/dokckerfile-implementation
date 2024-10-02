@@ -60,13 +60,13 @@ def evaluate_model():
     report = classification_report(y_test, y_pred, output_dict=True)
 
     # Save evaluation report
-    evaluation_report_path = 'result/evaluation_report.json'
+    evaluation_report_path = '/app/results/evaluation_report.json'
     print(f"Saving evaluation report to {evaluation_report_path}")
     with open(evaluation_report_path, 'w') as f:
         json.dump(report, f, indent=4)
 
     # Save accuracy metrics
-    accuracy_path = 'result/accuracy.txt'
+    accuracy_path = '/app/results/accuracy.txt'
     print(f"Saving accuracy report to {accuracy_path}")
     with open(accuracy_path, 'w') as f:
         f.write(f'Accuracy: {accuracy:.2f}\n')
